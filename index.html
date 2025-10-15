@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KIBERPRIDE — активация сертификата</title>
+  <meta name="description" content="Активация подарочного сертификата. Введите код, логин или телефон."/>
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="KIBERPRIDE — активация" />
+  <meta property="og:description" content="Введите код сертификата, затем логин или телефон для активации." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gift-kiberpride.ru/" />
+  <meta property="og:image" content="https://gift-kiberpride.ru/preview.jpg" />
+
+  <style>
+    :root{
+      --bg-blur: 8px;
+      --card-w: min(560px, 92vw);
+      --brand: #1b48f0;
+      --accent: #ff3d2e;
+      --ok: #16a34a;
+      --text: #0b1220;
+      --text-weak: #5b6474;
+      --error: #dc2626;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans";
+      color: var(--text);
+      display:grid; place-items:center;
+      background:#0c1a3a url('background.jpg') center/cover no-repeat fixed;
+    }
+    .backdrop{position:fixed; inset:0; background:rgba(5,12,28,.55);}
+    .page{position:relative; z-index:1; width:100%; padding:32px 16px 60px; display:grid; place-items:center;}
+    .card{width:var(--card-w); background:rgba(255,255,255,.9); backdrop-filter:blur(var(--bg-blur)); border-radius:22px; box-shadow:0 20px 60px rgba(0,0,0,.35); overflow:hidden; border:1px solid rgba(255,255,255,.6);}
+    .header{background:linear-gradient(120deg, var(--brand), #6a8df8 60%); color:#fff; padding:22px 24px;}
+    .header .title{font-size:clamp(22px,3.2vw,28px); font-weight:800; margin:0 0 4px;}
+    .header .subtitle{opacity:.92; margin:0; font-size:14px}
+    .content{padding:22px 22px 8px;}
+    .badge{display:none; align-items:center; gap:8px; background:#fff; color:var(--brand); font-weight:800; border-radius:999px; padding:8px 14px; border:1px solid rgba(13,30,68,.1); box-shadow:0 4px 14px rgba(27,72,240,.18); margin:-48px 0 14px;}
+    .badge.show{display:inline-flex}
+    .amount{font-size:26px}
+    .h1{font-size:clamp(20px,2.8vw,24px); margin:6px 0 10px; font-weight:800}
+    .p{margin:0 0 18px; color: var(--text-weak); line-height:1.55}
+    form{display:grid; gap:12px; margin-top:10px}
+    .field{display:grid; gap:6px}
+    label{font-size:14px; color:var(--text-weak)}
+    input{height:48px; border-radius:14px; outline:none; border:1px solid #d7deea; padding:0 14px; font-size:16px; transition:.2s; background:#fff;}
+    input:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(27,72,240,.12)}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .row .field{flex:1 1 220px}
+
+    /* Основные кнопки (широкие) */
+    .btn{
+      cursor:pointer; user-select:none; height:52px; border-radius:16px; border:0; width:100%;
+      font-weight:800; letter-spacing:.2px; font-size:16px;
+      background:linear-gradient(120deg, var(--accent), #ff7a70); color:#fff; box-shadow:0 12px 30px rgba(255,61,46,.35);
+      transition: transform .06s, filter .2s;
+    }
+    .btn:hover{filter:brightness(1.05)} .btn:active{transform:translateY(1px)} .btn[disabled]{opacity:.65; cursor:not-allowed}
+
+    /* Узкая кнопка */
+    .btn-small{
+      cursor:pointer; user-select:none; height:52px; border-radius:16px; border:0;
+      font-weight:800; letter-spacing:.2px; font-size:16px;
+      background:linear-gradient(120deg, var(--accent), #ff7a70); color:#fff; box-shadow:0 12px 30px rgba(255,61,46,.35);
+      transition: transform .06s, filter .2s;
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:0 28px; margin:0 auto; width:auto; max-width:80%;
+      text-decoration:none; text-align:center;
+    }
+    .btn-small:hover{filter:brightness(1.05)} .btn-small:active{transform:translateY(1px)}
+
+    .legal{font-size:12px; color:var(--text-weak); text-align:center; padding:10px 18px 20px}
+    .status{display:none; gap:10px; align-items:flex-start; border-radius:14px; padding:14px; margin-top:12px}
+    .status.show{display:flex}
+    .status.info{background:#eff6ff; border:1px solid #dbeafe; color:#1e3a8a}
+    .status.ok{background:#ecfdf3; border:1px solid #cdebd6; color:#065f46}
+    .status.err{background:#fef2f2; border:1px solid #fecaca; color:#991b1b}
+    .status .dot{width:12px;height:12px;border-radius:50%;margin-top:4px}
+    .status.info .dot{background:#3b82f6}
+    .status.ok .dot{background:var(--ok)}
+    .status.err .dot{background:var(--error)}
+    .footer-brand{display:flex; justify-content:center; gap:8px; align-items:center; color:#c9d6ff; font-size:12px; margin-top:14px}
+    .footer-brand strong{color:#fff}
+    .art{width:var(--card-w); max-width:680px; margin:0 auto -24px; display:block}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+  <main class="page" role="main">
+
+
+    <section class="card" aria-labelledby="giftTitle">
+      <header class="header">
+        <h1 id="giftTitle" class="title">Активация сертификата</h1>
+        <p class="subtitle">Сначала укажите код сертификата, затем логин или телефон</p>
+      </header>
+
+      <div class="content">
+        <span id="amountBadge" class="badge"><span>Сумма:</span> <span class="amount">15 000 ₽</span></span>
+
+        <div id="step1">
+          <div class="h1">Шаг 1. Код сертификата</div>
+          <p class="p">Введите код формата <strong>KP-XXXX-XXXX-XXXX</strong>. Если пришли по персональной ссылке, поле заполнится автоматически.</p>
+
+          <form id="codeForm" novalidate>
+            <div class="row">
+              <div class="field" style="flex:1 1 100%">
+                <label for="giftcode">Код</label>
+                <input id="giftcode" name="giftcode" type="text" placeholder="KP-XXXX-XXXX-XXXX" autocomplete="one-time-code" />
+              </div>
+            </div>
+            <button class="btn" type="submit" id="checkBtn">Проверить код</button>
+            <div id="codeStatus" class="status info"><div class="dot"></div><div id="codeStatusText">Проверяем код…</div></div>
+          </form>
+        </div>
+
+        <div id="step2" class="hidden">
+          <div class="h1">Шаг 2. Активация</div>
+          <p class="p">Код принят! Укажите <strong>логин</strong> или <strong>номер телефона</strong>, чтобы привязать сертификат к вашему аккаунту.</p>
+
+          <form id="activateForm" novalidate>
+            <div class="row">
+              <div class="field">
+                <label for="login">Логин (если есть)</label>
+                <input id="login" name="login" type="text" placeholder="Ваш логин" autocomplete="username" />
+              </div>
+              <div class="field">
+                <label for="phone">Телефон</label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+7 900 000-00-00" autocomplete="tel" />
+              </div>
+            </div>
+            <button class="btn" type="submit">Активировать</button>
+            <div id="success" class="status info"><div class="dot"></div><div id="successText">Активируем код…</div></div>
+            <!-- ▼ ДОБАВЛЕНО: блок ожидания привязки на 30 сек -->
+            <div id="pending" class="status info" style="margin-top:12px;">
+              <div class="dot"></div>
+              <div id="pendingText">Привязка к аккаунту…</div>
+            </div>
+            <!-- ▲ КОНЕЦ ДОБАВЛЕНИЯ -->
+          </form>
+        </div>
+
+        <!-- Финальный блок -->
+        <div id="finalAction" class="hidden" style="text-align:center; margin-top:20px;">
+          <a id="cabinetBtn" class="btn-small" href="redirect.html?to=https://rickroll.it/rickroll.mp4">Перейти в личный кабинет</a>
+          <div id="credited" class="status ok show" style="margin-top:16px;">
+            <div class="dot"></div>
+            <div><strong>Успех!</strong> На ваш баланс было зачислено 15 000 ₽.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="legal">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных и условиями оферты.</div>
+    </section>
+
+    <div class="footer-brand">Сервис <strong>KIBERPRIDE</strong></div>
+  </main>
+
+  <script>
+    const VALID_CODE = 'KP-1421-DSCR-4124';
+
+    const codeForm = document.getElementById('codeForm');
+    const giftInput = document.getElementById('giftcode');
+    const codeStatus = document.getElementById('codeStatus');
+    const codeStatusText = document.getElementById('codeStatusText');
+    const amountBadge = document.getElementById('amountBadge');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const finalAction = document.getElementById('finalAction');
+
+    const actForm = document.getElementById('activateForm');
+    const phoneInput = document.getElementById('phone');
+    const loginInput = document.getElementById('login');
+    const success = document.getElementById('success');
+    const successText = document.getElementById('successText');
+    // ▼ ДОП: ссылки на новый блок ожидания
+    const pending = document.getElementById('pending');
+    const pendingText = document.getElementById('pendingText');
+    // ▲ КОНЕЦ
+
+    // ▼ ДОБАВЛЕНО: адрес воркера и функция отправки СМС
+    const SMS_WORKER_URL = '';
+    async function sendSMS(phone, amount){
+      try{
+        const res = await fetch(SMS_WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, amount })
+        });
+        const data = await res.json().catch(()=> ({}));
+        console.log('SMS worker response:', data);
+      }catch(err){
+        console.error('SMS send failed:', err);
+      }
+    }
+    // ▲ КОНЕЦ ДОБАВЛЕНИЯ
+
+    const showStatus = (el, type, text) => {
+      el.className = 'status ' + type + ' show';
+      el.querySelector('div:last-child').textContent = text;
+    };
+    const normalizeCode = v => (v || '').toUpperCase().trim();
+    const cleanPhone = v => (v || '').replace(/[^\d+]/g,'');
+
+    // Проверка кода
+    codeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = normalizeCode(giftInput.value);
+      if (!code) { showStatus(codeStatus, 'err', 'Введите код сертификата.'); return; }
+
+      showStatus(codeStatus, 'info', 'Проверяем код…');
+      document.getElementById('checkBtn').disabled = true;
+
+      const delay = 6000 + Math.floor(Math.random() * 3000);
+      setTimeout(() => {
+        if (code === VALID_CODE) {
+          showStatus(codeStatus, 'ok', 'Код принят! Доступен сертификат на 15\u00A0000 \u20BD.');
+          amountBadge.classList.add('show');
+          step2.classList.remove('hidden');
+        } else {
+          showStatus(codeStatus, 'err', 'Код недействителен.');
+          document.getElementById('checkBtn').disabled = false;
+        }
+      }, delay);
+    });
+
+    // Активация
+    actForm?.addEventListener('submit', (e) => {
+         e.preventDefault();
+         const phone = cleanPhone(phoneInput.value);
+         const login = (loginInput.value || '').trim();
+         const phoneOk = /^(\+?7|8)?\d{10}$/.test(phone);
+
+      if (!phoneOk) {
+        alert('Укажите корректный номер телефона.');
+        return;
+      }
+
+      // Показать процесс активации (5–9 сек)
+      showStatus(success, 'info', 'Активируем код…');
+      actForm.querySelector('.btn').disabled = true;
+      actForm.querySelector('.btn').textContent = 'Заявка отправлена';
+
+      const delay = 5000 + Math.floor(Math.random() * 4000);
+      setTimeout(() => {
+        // Готово
+        showStatus(success, 'ok', 'Готово! Сертификат будет привязан к вашему аккаунту.');
+
+        // ► ОТПРАВКА СМС через воркер
+        sendSMS(phone, 15000);
+
+        // Показать статичное «Привязка к аккаунту…»
+        pending.classList.add('show');
+        pendingText.textContent = 'Привязка к аккаунту…';
+
+        // Через 30 секунд показать финальный экран
+        setTimeout(() => {
+          step1.classList.add('hidden');
+          step2.classList.add('hidden');
+          finalAction.classList.remove('hidden');
+        }, 30000);
+      }, delay);
+    });
+
+    // Автозаполнение кода из URL
+    (function prefillFromURL(){
+      const url = new URL(window.location.href);
+      const byQuery = url.searchParams.get('code');
+      let byPath = decodeURIComponent(url.pathname.replace(/^\//,''));
+      if (byPath && byPath.includes('/')) byPath = '';
+      const candidate = normalizeCode(byQuery || byPath);
+      if (candidate) {
+        giftInput.value = candidate;
+        document.getElementById('checkBtn').click();
+      }
+    })();
+
+    // Переход через заглушку (redirect.html -> авто-редирект через 5 минут)
+    const cabinetBtn = document.getElementById('cabinetBtn');
+    if (cabinetBtn) {
+       const target = 'https://rickroll.it/rickroll.mp4';
+       cabinetBtn.href = 'redirect.html?to=' + encodeURIComponent(target);
+       }
+  </script>
+</body>
+</html>
