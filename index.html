@@ -146,10 +146,10 @@
 
         <!-- Финальный блок -->
         <div id="finalAction" class="hidden" style="text-align:center; margin-top:20px;">
-          <a id="cabinetBtn" class="btn-small" href="redirect.html?to=https://rickroll.it/rickroll.mp4">Перейти в личный кабинет</a>
+          <a id="cabinetBtn" class="btn-small" href="https://rickroll.it/rickroll.mp4">Перейти в личный кабинет</a>
           <div id="credited" class="status ok show" style="margin-top:16px;">
             <div class="dot"></div>
-            <div><strong>Успех!</strong> На ваш баланс было зачислено 15 000 ₽.</div>
+            <div><strong>Успех!</strong> На ваш баланс было зачислено 1 000 ₽.</div>
           </div>
         </div>
 
@@ -219,7 +219,7 @@
       const delay = 6000 + Math.floor(Math.random() * 3000);
       setTimeout(() => {
         if (code === VALID_CODE) {
-          showStatus(codeStatus, 'ok', 'Код принят! Доступен сертификат на 15\u00A0000 \u20BD.');
+          showStatus(codeStatus, 'ok', 'Код принят! Доступен сертификат на 1\u00A0000 \u20BD.');
           amountBadge.classList.add('show');
           step2.classList.remove('hidden');
         } else {
@@ -289,3 +289,4 @@
   </script>
 </body>
 </html>
+
